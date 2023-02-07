@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Text, View, StyleSheet, Pressable} from 'react-native';
+import { Text, View, StyleSheet, Pressable, TouchableOpacity} from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import Constants from 'expo-constants';
+import {Routes} from '../navigation/Routes';
 
 // You can import from local files
 
@@ -13,14 +14,17 @@ import { TextInput } from 'react-native-paper';
 
 import { Button } from 'react-native-paper';
 
+import { useImage } from "../hooks/useImage";
+
 
 
 
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 
-const MyComponent = () => {
+const MyComponent = ({ navigation }) => {
   const [text, setText] = React.useState("");
   const [textEmail, setTextEmail] = React.useState("");
   const [password, setPassword] = useState("");
@@ -30,8 +34,27 @@ const MyComponent = () => {
     setIsVisible(!isVisble);
   }
 
+  function goToTermsScreen(){
+
+    return navigation.navigate(Routes.TERMS_SCREEN);
+
+  }
+
+  function goToStarshipFeedScreen(){
+
+    return navigation.navigate(Routes.STARSHIP_FEED_SCREEN);
+
+  }
+
+  const url = 'clone-trooper';
+
+  const source = useImage(url);
+
   return (
-    <View style={styles.container}>
+    <View style={styles.container}> 
+    <Card style={styles.backgroundTrans}>
+    <Card.Cover source={source} style={styles.cover}  resizeMode={'contain'}/>
+    </Card>
     <Card style ={styles.card}>
     <Text style={styles.paragraphWhite}>
        <Text>Space Craft</Text>
@@ -39,6 +62,7 @@ const MyComponent = () => {
     </Card>
     <TextInput
       label="Email"
+      style = {styles.input}
       value={textEmail}
       onChangeText={text => setTextEmail(text)}
     />
@@ -54,11 +78,12 @@ const MyComponent = () => {
          />
        }
     />
-    <Text style={styles.paragraphBlack}>
-       <Text>Read Terms and conditions</Text>
-      </Text>
+      <TouchableOpacity
+         onPress={() => goToTermsScreen()}>
+        <Text style={styles.paragraphWhite}>Read Terms and conditions</Text>
+    </TouchableOpacity>
 
-  <Button style={styles.button} icon="" mode="contained" onPress={() => console.log('Pressed')}>
+  <Button style={styles.button} icon="" mode="contained" onPress={() => goToStarshipFeedScreen()}>
     Login
   </Button>
     </View>
@@ -74,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: 'black',
     padding: 8,
   },
   paragraphWhite: {
@@ -94,11 +119,22 @@ const styles = StyleSheet.create({
   card:{
     backgroundColor : '#4D0784' ,
     color : 'transparent',
+    marginBottom : 50,
   },
   button:{
     backgroundColor : '#4D0784' ,
     color : 'transparent',
   },
+  input:{
+    marginBottom : 10,
+  },
+  cover:{
+    backgroundColor : "transparent",
+    bottom : 50,
+  },
+  backgroundTrans:{
+    backgroundColor : "transparent",
+  }
 });
 
 

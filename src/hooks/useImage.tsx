@@ -33,6 +33,9 @@ export const useImage = (title: string) => {
       case "rebeltransport":
         source = require("../../assets/rebeltransport.jpg");
         break;
+      case "clone-trooper":
+        source = require("../../assets/clone-trooper.png");
+        break;
     }
     return source;
   };

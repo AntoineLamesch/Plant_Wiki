@@ -1,14 +1,19 @@
 import React from 'react';
 
 import {
-    StyleSheet, Text, View, FlatList, Image, TouchableOpacity, StatusBar 
+    StyleSheet, Text, View, FlatList, Image, TouchableOpacity, StatusBar, ScrollView 
 } from 'react-native';
-import { Button, Card } from 'react-native-paper';
+import { Button, Card, Appbar} from 'react-native-paper';
+import AppbarHeader from 'react-native-paper/lib/typescript/components/Appbar/AppbarHeader';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import {Routes} from '../navigation/Routes';
 
 import { default as dataJson } from "../../api/data2.json";
 
 import { useImage } from "../hooks/useImage";
+
+
 
 function Item({ item }) {
     //const urlRacc = item.name.toLowerCase();
@@ -49,15 +54,27 @@ const DATA = dataJson.results.map((item)=>({
 
 
 
-export const StarshipFeedScreen = () => {
-    return (
 
+
+export const StarshipFeedScreen = (navigation) => {
+
+
+  
+
+  
+
+
+    return (
+      <SafeAreaProvider>
+      <ScrollView style = {{ backgroundColor : "black"}}>
         <FlatList
           style={styles.backBlack}
           data={DATA}
           renderItem={({ item }) => <Item item={item}/>}
           keyExtractor={item => item.url}
         />
+      </ScrollView>
+      </SafeAreaProvider>
  
       );
 };

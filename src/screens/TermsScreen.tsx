@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, ScrollView } from "react-native";
+import { View, Image, ScrollView, StyleSheet} from "react-native";
 import { Appbar, Text, useTheme } from "react-native-paper";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -11,15 +11,17 @@ export function TermsScreen({ navigation }) {
     navigation.goBack();
   }
 
+  
+
   return (
     <SafeAreaProvider>
-    <ScrollView>
+    <ScrollView style = {{ backgroundColor : "black"}}>
       <Appbar.Header style={{ backgroundColor: theme.colors.elevation.level5 }}>
         <Appbar.BackAction onPress={goBack} />
         <Appbar.Content title="Terms and Conditions" />
       </Appbar.Header>
       <View style={{ padding: 32 }}>
-        <Text variant="bodyMedium" style={{ marginBottom: 24 }}>
+        <Text variant="bodyMedium" style={ styles.text }>
           This Terms of Service, including all supplemental terms as amended
           from time to time, governs your use of the online game, service, or
           web site known as Star Wars: The Old Republic ("TOR" and the "TOR
@@ -33,7 +35,7 @@ export function TermsScreen({ navigation }) {
           website from which you may also print a copy for your records.
         </Text>
         <Text variant="titleMedium">1. Account</Text>
-        <Text variant="bodyMedium" style={{ marginBottom: 24 }}>
+        <Text variant="bodyMedium" style={ styles.text}>
           A TOR Account ("Account") may be required to access and use TOR
           Services. If you have questions about Account registration, please
           contact us by visiting http://www.swtor.com/support. To create a TOR
@@ -58,7 +60,7 @@ export function TermsScreen({ navigation }) {
           your password reminder words.
         </Text>
         <Text variant="titleMedium">2. Service</Text>
-        <Text variant="bodyMedium" style={{ marginBottom: 24 }}>
+        <Text variant="bodyMedium" style={styles.text}>
           Some TOR Services require payment of a fee. You must have an Account
           and pay the subscription or other fees to participate in these
           activities. Information about subscription and other fees for TOR
@@ -66,7 +68,7 @@ export function TermsScreen({ navigation }) {
           http://www.swtor.com/support.
         </Text>
         <Text variant="titleMedium">3. Privacy</Text>
-        <Text variant="bodyMedium" style={{ marginBottom: 24 }}>
+        <Text variant="bodyMedium" style={ styles.text}>
           Your privacy is important to us. Please read the TOR Privacy Policy
           carefully for information relating to TOR collection and use of
           personal information. You may access the TOR Privacy Policy by
@@ -81,7 +83,7 @@ export function TermsScreen({ navigation }) {
           Policy at http://www.swtor.com/legalnotices/privacypolicy.
         </Text>
         <Text variant="titleMedium">4. Content</Text>
-        <Text variant="bodyMedium" style={{ marginBottom: 24 }}>
+        <Text variant="bodyMedium" style={styles.text}>
           "Content" on TOR Services may include software, technology, text,
           artwork, music, sound, and other audio visual material, and the design
           and appearance of our websites. Content may be provided by third
@@ -109,4 +111,15 @@ export function TermsScreen({ navigation }) {
     </ScrollView>
     </SafeAreaProvider>
   );
+
+
+  
 } 
+
+const styles = StyleSheet.create({
+  text:{
+    marginBottom : 24,
+    color : "white",
+  }
+});
+
