@@ -30,5 +30,11 @@ Or search this address with your browser :
 
 ### exp://exp.host/@lamesch.antoine/plantwiki?release-channel=default
 
+# Screenshot de progression sur https://davidl.fr/workshop Progression on https://davidl.fr/workshop : 
+
+![til](https://github.com/AntoineLamesch/Plant_Wiki/blob/master/assets/images/progression.png?raw=true)
+
+
+
 
 
