@@ -86,7 +86,7 @@ export const DetailsScreen = ({ route }) => {
     </Card>
   );
 
-  const { result, value, name,  data } = route.params;
+  const { result, value, name, data } = route.params;
   console.log(name);
 
   const url = "fond";

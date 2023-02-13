@@ -65,8 +65,13 @@ export const MainScreen = ({ route }) => {
   console.log(value);
   console.log(data.data);
 
-  function goToDetailsScreen(result: any, value: any, name: any,  data: any) {
-    return navigation.navigate(Routes.DETAILS_SCREEN, { result, value, name,  data });
+  function goToDetailsScreen(result: any, value: any, name: any, data: any) {
+    return navigation.navigate(Routes.DETAILS_SCREEN, {
+      result,
+      value,
+      name,
+      data,
+    });
   }
 
   const dataSubmit = async (name) => {
@@ -79,7 +84,7 @@ export const MainScreen = ({ route }) => {
       if (data != null) {
         goToDetailsScreen(result, value, name, data);
       } else {
-        goToDetailsScreen(result, value,  name, data);
+        goToDetailsScreen(result, value, name, data);
       }
     } catch (error) {
       console.error(error);
