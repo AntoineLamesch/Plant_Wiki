@@ -33,8 +33,11 @@ export const useImage = (title: string) => {
       case "rebeltransport":
         source = require("../../assets/rebeltransport.jpg");
         break;
-      case "clone-trooper":
-        source = require("../../assets/clone-trooper.png");
+      case "feuilles":
+        source = require("../../assets/feuilles.gif");
+        break;
+      case "fond":
+        source = require("../../assets/leaf.png");
         break;
     }
     return source;
