@@ -1,27 +1,23 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React from "react";
 
 import {
   StyleSheet,
   Text,
   View,
   FlatList,
-  Image,
-  TouchableOpacity,
   StatusBar,
-  ScrollView,
   SafeAreaView,
   ImageBackground,
 } from "react-native";
 import { Button, Card, Appbar, ActivityIndicator } from "react-native-paper";
-import AppbarHeader from "react-native-paper/lib/typescript/components/Appbar/AppbarHeader";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 import { Routes } from "../navigation/Routes";
 import { useNavigation } from "@react-navigation/native";
-import { default as dataJson } from "../../api/data2.json";
 
 import { useImage } from "../hooks/useImage";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+//Creator @AntoineLamesch
 
 type Plantes = {
   id: number;
@@ -32,21 +28,35 @@ type Plantes = {
   title: string;
   subtitle: string;
   bibliography: string;
+  year: number;
 };
 
-const Item = ({ title, image_url, subtitle, bibliography, id }: Plantes) => (
-  <View style={styles.backColor}>
-    <Card style={styles.backColor}>
-      <Card.Title
-        titleStyle={{ color: "white" }}
-        subtitleStyle={{ color: "white" }}
-        title={title}
-        subtitle={subtitle}
-      />
-      <Card.Cover source={{ uri: image_url }} />
-      <Text style={styles.textWhite}>{bibliography}</Text>
-    </Card>
-  </View>
+const Item = (
+  { title, image_url, subtitle, year, id }: Plantes //Creation of a model of an item
+) => (
+  <Card style={styles.backColor}>
+    <Card.Title
+      titleStyle={{ color: "white" }}
+      subtitleStyle={{ color: "white" }}
+      title={
+        <Text>
+          <Text style={styles.highlight}>Nom : </Text>
+          {title}
+        </Text>
+      }
+      subtitle={
+        <Text>
+          <Text style={styles.highlight}>Nom scientifique : </Text>
+          {subtitle}
+        </Text>
+      }
+    />
+    <Card.Cover source={{ uri: image_url }} />
+    <Text style={styles.textWhite}>
+      <Text style={styles.highlight}>Première publication : </Text>
+      {year}
+    </Text>
+  </Card>
 );
 
 export const MainScreen = ({ route }) => {
@@ -55,38 +65,30 @@ export const MainScreen = ({ route }) => {
   console.log(value);
   console.log(data.data);
 
-  function goToError() {
-    return navigation.navigate(Routes.TERMS_SCREEN);
+  function goToDetailsScreen(result: any, value: any, name: any,  data: any) {
+    return navigation.navigate(Routes.DETAILS_SCREEN, { result, value, name,  data });
   }
 
-  function goToDetailsScreen(data: any, value: any) {
-    return navigation.navigate(Routes.DETAILS_SCREEN, { data, value });
-  }
-
-  const handleSubmit = async (name) => {
+  const dataSubmit = async (name) => {
+    //Submit the API request with the value in the input, if it is good go to the main screen else go to error
     try {
       const response = await fetch(
         `https://trefle.io/api/v1/plants/?token=tLUrGmjRQILBatsvJO7Bl3E8hhwAcszsXxrW6BLpszI&filter[common_name]=${name}`
       );
-      const data = await response.json();
+      const result = await response.json();
       if (data != null) {
-        goToDetailsScreen(data, name);
+        goToDetailsScreen(result, value, name, data);
       } else {
-        goToError();
+        goToDetailsScreen(result, value,  name, data);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const source = useImage("fond");
+  const source = useImage("fond"); //Use the hook named 'used image' for use image simply
 
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
-
-  const handleNavigation = () => {
-    console.log("go");
-    navigation.navigate(Routes.TERMS_SCREEN);
-  };
+  const navigation = useNavigation<NativeStackNavigationProp<any>>(); //useNavigationProp to correct a bug
 
   return (
     <ImageBackground source={source} resizeMode="cover" style={styles.image}>
@@ -96,24 +98,27 @@ export const MainScreen = ({ route }) => {
             style={{ backgroundColor: "white" }}
             onPress={() => {
               {
-                navigation.navigate(Routes.LOGIN_SCREEN);
+                navigation.navigate(Routes.RESEARCH_SCREEN);
               }
             }}
           />
-          <Appbar.Content titleStyle={{ color: "white" }} title="Main Screen" />
+          <Appbar.Content
+            titleStyle={{ color: "white" }}
+            title="Ecran Principal"
+          />
         </Appbar.Header>
         <View style={{ flex: 1, padding: 24 }}>
           <SafeAreaView style={styles.container}>
-            <Card style={styles.backBlack}>
+            <Card style={styles.backTitle}>
               <Text style={styles.headerText}>
                 Votre recherche pour{" "}
                 <Text style={styles.highlight}>{value}</Text>
               </Text>
             </Card>
-            <FlatList
+            <FlatList //Render a flatlist of all the data provide by the precedent screen and on the model of the items declared at the top
               data={data.data}
               renderItem={({ item }) => (
-                <Card>
+                <Card style={styles.color}>
                   <Item
                     title={item.common_name}
                     subtitle={item.scientific_name}
@@ -123,15 +128,17 @@ export const MainScreen = ({ route }) => {
                     common_name={""}
                     scientific_name={""}
                     author={""}
+                    year={item.year}
                   />
                   <Button
+                    style={styles.color}
                     onPress={() => {
                       {
-                        handleSubmit(item.common_name);
+                        dataSubmit(item.common_name);
                       }
                     }}
                   >
-                    <Text style={styles.textCardBlack}>VOIR +</Text>
+                    <Text style={styles.textWhite}>VOIR +</Text>
                   </Button>
                 </Card>
               )}
@@ -159,6 +166,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
   },
+  color: {
+    backgroundColor: "#228B22",
+    marginBottom: 10,
+  },
   listItem: {
     margin: 10,
     padding: 10,
@@ -176,6 +187,7 @@ const styles = StyleSheet.create({
   },
   textWhite: {
     color: "white",
+    textAlignVertical: "center",
   },
   backWhite: {
     backgroundColor: "white",
@@ -183,15 +195,20 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 20,
   },
-  backBlack: {
-    backgroundColor: "black",
+  backTitle: {
+    backgroundColor: "#228B22",
     marginBottom: 10,
     padding: 20,
+    borderColor: "white",
+    borderWidth: 1,
   },
   backColor: {
-    backgroundColor: "#001D0B",
+    backgroundColor: "#228B22",
     color: "white",
     marginBottom: 10,
+  },
+  view: {
+    marginBottom: 20,
   },
   textCard: {
     color: "white",
@@ -215,6 +232,8 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   highlight: {
-    color: "yellow",
+    color: "white",
+    textTransform: "uppercase",
+    fontWeight: "bold",
   },
 });

@@ -1,31 +1,17 @@
 import * as React from "react";
-import { useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Pressable,
-  TouchableOpacity,
-  ImageBackground,
-  FlatList,
-} from "react-native";
+import { Text, StyleSheet, ImageBackground, FlatList } from "react-native";
 import SafeAreaView, { SafeAreaProvider } from "react-native-safe-area-view";
-import Constants from "expo-constants";
 import { Routes } from "../navigation/Routes";
+
+//Creator @AntoineLamesch
 
 // You can import from local files
 
 // or any pure javascript modules available in npm
 import { Appbar, Card } from "react-native-paper";
 
-import { TextInput } from "react-native-paper";
-
-import { Button } from "react-native-paper";
-
 import { useImage } from "../hooks/useImage";
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { black } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -39,65 +25,73 @@ type Plantes = {
   subtitle: string;
   bibliography: string;
   year: string;
-  family_common_name : string;
-  synonyms : [];
+  family_common_name: string;
+  synonyms: [];
 };
 
-const MyComponent = ({ route }) => {
-  const Item = ({ title, image_url, subtitle, bibliography, year, family_common_name, synonyms}: Plantes) => (
-    
-      <Card style={styles.backColor}>
-        <Card.Title
-          titleStyle={{ color: "white" }}
-          subtitleStyle={{ color: "white" }}
-          title={title}
-          subtitle={subtitle}
-        />
-        <Card.Cover source={{ uri: image_url }} />
-        <Text style={styles.textWhite}><Text style={styles.highlight}>Bibliographie : </Text>{bibliography}</Text>
+export const DetailsScreen = ({ route }) => {
+  const Item = ({
+    //Creation of a model of an item
+    title,
+    image_url,
+    subtitle,
+    bibliography,
+    year,
+    family_common_name,
+    synonyms,
+    author,
+  }: Plantes) => (
+    <Card style={styles.backColor}>
+      <Card.Title
+        titleStyle={{ color: "white" }}
+        subtitleStyle={{ color: "white" }}
+        title={
+          <Text>
+            <Text style={styles.highlight}>Nom : </Text>
+            {title}
+          </Text>
+        }
+        subtitle={
+          <Text>
+            <Text style={styles.highlight}>Nom scientifique : </Text>
+            {subtitle}
+          </Text>
+        }
+      />
+      <Card.Cover source={{ uri: image_url }} />
 
-        <Text style={styles.textWhite}><Text style={styles.highlight}> Année de découverte :</Text> {year}</Text>
+      <Text style={styles.textWhite}>
+        <Text style={styles.highlight}>Première publication : </Text> {year}
+      </Text>
 
-        <Text style={styles.textWhite}><Text style={styles.highlight}>Nom commun de la famille : </Text>{family_common_name}</Text>
+      <Text style={styles.textWhite}>
+        <Text style={styles.highlight}>Premier recensement dans : </Text>
+        {bibliography}
+      </Text>
 
-        <Text style={styles.textWhite}><Text style={styles.highlight}>Synonyme : </Text>{synonyms[1] + " , " +synonyms[2]}</Text>
-      </Card>
+      <Text style={styles.textWhite}>
+        <Text style={styles.highlight}>Auteur : </Text>
+        {author}
+      </Text>
+
+      <Text style={styles.textWhite}>
+        <Text style={styles.highlight}>Famille : </Text>
+        {family_common_name}
+      </Text>
+
+      <Text style={styles.textWhite}>
+        <Text style={styles.highlight}>Synonyme : </Text>
+        {synonyms[1] + " , " + synonyms[2]}
+      </Text>
+    </Card>
   );
 
-  function goToTermsScreen() {
-    return navigation.navigate(Routes.TERMS_SCREEN);
-  }
-
-  function goToMainScreen(data, value) {
-    return navigation.navigate(Routes.MAIN_SCREEN, { data });
-  }
-
-  function goToError() {
-    return navigation.navigate(Routes.TERMS_SCREEN);
-  }
-
-  const { data, value } = route.params;
-  console.log(value);
-
-  const handleSubmit = async () => {
-    try {
-      const response = await fetch(
-        `https://trefle.io/api/v1/plants/search?token=tLUrGmjRQILBatsvJO7Bl3E8hhwAcszsXxrW6BLpszI&q=${value}`
-      );
-      const data = await response.json();
-      if (data != null) {
-        goToMainScreen(data, value);
-      } else {
-        goToError();
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { result, value, name,  data } = route.params;
+  console.log(name);
 
   const url = "fond";
 
-  const source = useImage(url);
+  const source = useImage(url); //Use the hook named 'used image' for use image simply
 
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
@@ -109,44 +103,54 @@ const MyComponent = ({ route }) => {
             style={{ backgroundColor: "white" }}
             onPress={() => {
               {
-                navigation.navigate(Routes.MAIN_SCREEN);
+                navigation.navigate(Routes.MAIN_SCREEN, {
+                  result,
+                  value,
+                  name,
+                  data,
+                });
               }
             }}
           />
-          <Appbar.Content titleStyle={{ color: "white" }} title="Main Screen" />
+          <Appbar.Content titleStyle={{ color: "white" }} title="DETAILS" />
         </Appbar.Header>
-          <SafeAreaView style={styles.container}>
-            <FlatList
-              data={data.data}
-              renderItem={({ item }) => (
-                  <Item
-                    title={item.common_name}
-                    subtitle={item.scientific_name}
-                    image_url={item.image_url}
-                    bibliography={item.bibliography}
-                    id={item.id}
-                    common_name={""}
-                    scientific_name={""}
-                    author={""}
-                    year={item.year}
-                    family_common_name ={item.family_common_name}
-                    synonyms = {item.synonyms}
-                  />
-              )}
-            />
-          </SafeAreaView>
+        <SafeAreaView style={styles.container}>
+          <Card style={styles.backTitle}>
+            <Text style={styles.headerText}>
+              <Text style={styles.highlight}>{name}</Text>
+            </Text>
+          </Card>
+          <FlatList
+            data={result.data}
+            renderItem={({ item }) => (
+              <Item
+                title={item.common_name}
+                subtitle={item.scientific_name}
+                image_url={item.image_url}
+                bibliography={item.bibliography}
+                id={item.id}
+                common_name={""}
+                scientific_name={""}
+                author={item.author}
+                year={item.year}
+                family_common_name={item.family_common_name}
+                synonyms={item.synonyms}
+              />
+            )}
+          />
+        </SafeAreaView>
       </SafeAreaProvider>
     </ImageBackground>
   );
 };
 
-export default MyComponent;
+export default DetailsScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    marginTop : 100,
+    marginTop: 40,
   },
   paragraphWhite: {
     margin: 24,
@@ -163,14 +167,9 @@ const styles = StyleSheet.create({
     color: "black",
   },
   card: {
-    backgroundColor: "#001D0B",
+    backgroundColor: "#228B22",
     color: "transparent",
-    marginBottom: 50,
-  },
-  card: {
-    backgroundColor: "#001D0B",
-    color: "transparent",
-    marginTOP: 50,
+    marginBottom: 70,
   },
   button: {
     backgroundColor: "#001D0B",
@@ -192,15 +191,28 @@ const styles = StyleSheet.create({
     backgroundAttachment: "local",
   },
   backColor: {
-    backgroundColor: "#001D0B",
+    backgroundColor: "#228B22",
     color: "white",
   },
   textWhite: {
     color: "white",
-    marginTop : 10,
+    marginTop: 10,
   },
   highlight: {
-    color: "yellow",
-    fontWeight : "bold",
+    textTransform: "uppercase",
+    color: "white",
+    fontWeight: "bold",
+  },
+  backTitle: {
+    backgroundColor: "#228B22",
+    marginBottom: 30,
+    padding: 20,
+    borderColor: "white",
+    borderWidth: 1,
+  },
+  headerText: {
+    color: "white",
+    textAlign: "center",
+    textTransform: "uppercase",
   },
 });

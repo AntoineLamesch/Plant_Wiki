@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "infos",
-    "slug": "infos",
+    "name": "plantwiki",
+    "slug": "plantwiki",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

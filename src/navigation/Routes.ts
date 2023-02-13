@@ -1,6 +1,5 @@
 export enum Routes {
-    LOGIN_SCREEN = 'Login',
-    TERMS_SCREEN = 'Terms',
+    RESEARCH_SCREEN = 'research',
     MAIN_SCREEN = 'main',
     DETAILS_SCREEN = 'details',
   }
